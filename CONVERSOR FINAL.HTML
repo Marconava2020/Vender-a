@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Dólares a Pesos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 5px;
+        }
+        .resultado {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            display: inline-block;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Conversor de Dólares a Pesos</h1>
+    
+    <label for="dolares">Ingresa el valor en dólares:</label><br>
+    <input type="number" id="dolares" placeholder="Ej: 100" oninput="calcular()"><br><br>
+
+    <label for="tasaCambio">Tasa de cambio (USD a COP):</label><br>
+    <input type="number" id="tasaCambio" placeholder="Ej: 4000"><br>
+    <button onclick="actualizarTasa()">Actualizar Tasa</button><br><br>
+
+    <div class="resultado">
+        <strong>Valor x 1.5:</strong><br>
+        <span id="resultado1">$0.00 pesos</span>
+    </div>
+
+    <div class="resultado">
+        <strong>Valor x 1.6:</strong><br>
+        <span id="resultado2">$0.00 pesos</span>
+    </div>
+
+    <script>
+        // Obtener la tasa de cambio almacenada o usar un valor predeterminado
+        let tasaCambio = localStorage.getItem('tasaCambio') || 4000;
+        document.getElementById('tasaCambio').value = tasaCambio;
+
+        // Función para actualizar la tasa de cambio
+        function actualizarTasa() {
+            const nuevaTasa = parseFloat(document.getElementById('tasaCambio').value);
+            if (!isNaN(nuevaTasa)) {
+                tasaCambio = nuevaTasa;
+                localStorage.setItem('tasaCambio', tasaCambio); // Guardar en localStorage
+                calcular(); // Recalcular los resultados
+            } else {
+                alert("¡Ingresa una tasa de cambio válida!");
+            }
+        }
+
+        // Función para calcular los resultados
+        function calcular() {
+            const dolares = parseFloat(document.getElementById('dolares').value);
+            if (!isNaN(dolares)) {
+                const pesos = dolares * tasaCambio; // Convertir a pesos colombianos
+                const resultado1 = pesos * 1.5; // Multiplicar por 1.5
+                const resultado2 = pesos * 1.6; // Multiplicar por 1.6
+
+                // Mostrar los resultados
+                document.getElementById('resultado1').innerText = `$${resultado1.toLocaleString('es-CO')} pesos`;
+                document.getElementById('resultado2').innerText = `$${resultado2.toLocaleString('es-CO')} pesos`;
+            } else {
+                // Si no es un número válido, mostrar $0.00
+                document.getElementById('resultado1').innerText = "$0.00 pesos";
+                document.getElementById('resultado2').innerText = "$0.00 pesos";
+            }
+        }
+
+        // Calcular automáticamente al cargar la página (si hay un valor en dólares)
+        window.onload = calcular;
+    </script>
+
+</body>
+</html>
